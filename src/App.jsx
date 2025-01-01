@@ -1,35 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [timeTaken, setTimeTaken] = useState(null);
+
+  const runLoop = () => {
+    const startTime = performance.now();
+    let sum = 0;
+
+    for (let i = 0; i < 1_000_000_000; i++) {
+      sum += i;
+    }
+
+    const endTime = performance.now(); 
+    setTimeTaken(endTime - startTime); 
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+      <h1>Performance Test: 1 Billion Iterations</h1>
+      <button onClick={runLoop} style={{ fontSize: '20px', padding: '10px 20px' }}>
+        Run Loop
+      </button>
+      {timeTaken !== null && (
+        <p style={{ fontSize: '18px', marginTop: '20px' }}>
+          Time taken: {timeTaken.toFixed(2)} ms
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
