@@ -4,13 +4,15 @@ function App() {
   const [timeTaken, setTimeTaken] = useState(null);
   const [progress, setProgress] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [counter, setCounter] = useState(0);
 
   const runLoopWithProgress = () => {
     setIsRunning(true);
     setProgress(0);
+    setCounter(0);
     const startTime = performance.now();
     let sum = 0;
-    const totalIterations = 1_000_000_000;
+    const totalIterations = 100_000_000;
     const batchSize = 10_000_000;
 
     function loopBatch(start) {
@@ -20,6 +22,7 @@ function App() {
 
       const currentProgress = Math.min(((start + batchSize) / totalIterations) * 100, 100);
       setProgress(currentProgress);
+      setCounter(start + batchSize); 
 
       if (start + batchSize < totalIterations) {
         setTimeout(() => loopBatch(start + batchSize), 0); // Schedule next batch
@@ -48,33 +51,20 @@ function App() {
       >
         {isRunning ? 'Running...' : 'Run Loop'}
       </button>
-      <div
-        style={{
-          width: '80%',
-          margin: '0 auto',
-          height: '30px',
-          backgroundColor: '#e0e0e0',
-          borderRadius: '5px',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            width: `${progress}%`,
-            height: '100%',
-            backgroundColor: progress === 100 ? '#4caf50' : '#2196f3',
-            transition: 'width 0.1s',
-          }}
-        />
-      </div>
+      
       {progress > 0 && (
         <p style={{ fontSize: '16px', marginTop: '10px' }}>
           Progress: {progress.toFixed(2)}%
         </p>
       )}
+      {isRunning && (
+        <p style={{ fontSize: '16px', marginTop: '10px', color: '#555' }}>
+          Iterations: {(counter * 10).toLocaleString()} / 1,000,000,000
+        </p>
+      )}
       {timeTaken !== null && (
         <p style={{ fontSize: '18px', marginTop: '20px', color: '#4caf50' }}>
-          Time taken: {timeTaken.toFixed(2)} ms
+          Time taken: {(timeTaken).toFixed(2)} ms
         </p>
       )}
     </div>
